@@ -1,3 +1,0 @@
-import CrazyPlatformerm;
-let game = CrazyPlatformer;
-game.run();
