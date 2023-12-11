@@ -4134,6 +4134,22 @@ this._StopTicking2();break}}GetDebuggerProperties(){const prefix="behaviors.scro
 }
 
 {
+'use strict';{const C3=self.C3;C3.Behaviors.Fade=class FadeBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.Fade.Type=class FadeType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const C3X=self.C3X;const IBehaviorInstance=self.IBehaviorInstance;const FADE_IN_TIME=0;const WAIT_TIME=1;const FADE_OUT_TIME=2;const DESTROY=3;const ACTIVE_AT_START=4;C3.Behaviors.Fade.Instance=class FadeInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._fadeInTime=0;this._waitTime=0;this._fadeOutTime=0;this._destroy=true;this._activeAtStart=true;this._setMaxOpacity=false;this._stage=0;this._stageTime=C3.New(C3.KahanSum);this._maxOpacity=
+this._inst.GetWorldInfo().GetOpacity()||1;if(properties){this._fadeInTime=properties[FADE_IN_TIME];this._waitTime=properties[WAIT_TIME];this._fadeOutTime=properties[FADE_OUT_TIME];this._destroy=!!properties[DESTROY];this._activeAtStart=!!properties[ACTIVE_AT_START];this._stage=this._activeAtStart?0:3}if(this._activeAtStart)if(this._fadeInTime===0){this._stage=1;if(this._waitTime===0)this._stage=2}else{this._inst.GetWorldInfo().SetOpacity(0);this._runtime.UpdateRender()}this._StartTicking()}Release(){super.Release()}SaveToJson(){return{"fit":this._fadeInTime,
+"wt":this._waitTime,"fot":this._fadeOutTime,"d":this._destroy,"s":this._stage,"st":this._stageTime.Get(),"mo":this._maxOpacity}}LoadFromJson(o){this._fadeInTime=o["fit"];this._waitTime=o["wt"];this._fadeOutTime=o["fot"];this._destroy=o["d"];this._stage=o["s"];this._stageTime.Set(o["st"]);this._maxOpacity=o["mo"];if(this._stage===3)this._StopTicking();else this._StartTicking()}Tick(){const dt=this._runtime.GetDt(this._inst);this._stageTime.Add(dt);const wi=this._inst.GetWorldInfo();if(this._stage===
+0){wi.SetOpacity(this._stageTime.Get()/this._fadeInTime*this._maxOpacity);this._runtime.UpdateRender();if(wi.GetOpacity()>=this._maxOpacity){wi.SetOpacity(this._maxOpacity);this._stage=1;this._stageTime.Reset();this.DispatchScriptEvent("fadeinend");this.Trigger(C3.Behaviors.Fade.Cnds.OnFadeInEnd)}}if(this._stage===1)if(this._stageTime.Get()>=this._waitTime){this._stage=2;this._stageTime.Reset();this.DispatchScriptEvent("waitend");this.Trigger(C3.Behaviors.Fade.Cnds.OnWaitEnd)}if(this._stage===2)if(this._fadeOutTime!==
+0){wi.SetOpacity(this._maxOpacity-this._stageTime.Get()/this._fadeOutTime*this._maxOpacity);this._runtime.UpdateRender();if(wi.GetOpacity()<=0){this._stage=3;this._stageTime.Reset();this.DispatchScriptEvent("fadeoutend");this.Trigger(C3.Behaviors.Fade.Cnds.OnFadeOutEnd);if(this._destroy)this._runtime.DestroyInstance(this._inst)}}else{this._stage=3;this._stageTime.Reset()}if(this._stage===3)this._StopTicking()}_StartFade(){if(!this._activeAtStart&&!this._setMaxOpacity){this._maxOpacity=this._inst.GetWorldInfo().GetOpacity()||
+1;this._setMaxOpacity=true}if(this._stage===3)this.Start()}_RestartFade(){this.Start()}Start(){this._stage=0;this._stageTime.Reset();if(this._fadeInTime===0){this._stage=1;if(this._waitTime===0)this._stage=2}else{this._inst.GetWorldInfo().SetOpacity(0);this._runtime.UpdateRender()}this._StartTicking()}_SetFadeInTime(t){this._fadeInTime=Math.max(t,0)}_GetFadeInTime(){return this._fadeInTime}_SetWaitTime(t){this._waitTime=Math.max(t,0)}_GetWaitTime(){return this._waitTime}_SetFadeOutTime(t){this._fadeOutTime=
+Math.max(t,0)}_GetFadeOutTime(){return this._fadeOutTime}GetPropertyValueByIndex(index){switch(index){case FADE_IN_TIME:return this._GetFadeInTime();case WAIT_TIME:return this._GetWaitTime();case FADE_OUT_TIME:return this._GetFadeOutTime();case DESTROY:return this._destroy}}SetPropertyValueByIndex(index,value){switch(index){case FADE_IN_TIME:this._SetFadeInTime(value);break;case WAIT_TIME:this._SetWaitTime(value);break;case FADE_OUT_TIME:this._SetFadeOutTime(value);break;case DESTROY:this._destroy=
+!!value;break}}GetDebuggerProperties(){const prefix="behaviors.fade";return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:prefix+".properties.fade-in-time.name",value:this._GetFadeInTime(),onedit:v=>this._SetFadeInTime(v)},{name:prefix+".properties.wait-time.name",value:this._GetWaitTime(),onedit:v=>this._SetWaitTime(v)},{name:prefix+".properties.fade-out-time.name",value:this._GetFadeOutTime(),onedit:v=>this._SetFadeOutTime(v)},{name:prefix+".debugger.stage",value:[prefix+".debugger."+
+["fade-in","wait","fade-out","done"][this._stage]]}]}]}GetScriptInterfaceClass(){return self.IFadeBehaviorInstance}};const map=new WeakMap;self.IFadeBehaviorInstance=class IFadeBehaviorInstance extends IBehaviorInstance{constructor(){super();map.set(this,IBehaviorInstance._GetInitInst().GetSdkInstance())}startFade(){map.get(this)._StartFade()}restartFade(){map.get(this)._RestartFade()}set fadeInTime(t){C3X.RequireFiniteNumber(t);map.get(this)._SetFadeInTime(t)}get fadeInTime(){return map.get(this)._GetFadeInTime()}set waitTime(t){C3X.RequireFiniteNumber(t);
+map.get(this)._SetWaitTime(t)}get waitTime(){return map.get(this)._GetWaitTime()}set fadeOutTime(t){C3X.RequireFiniteNumber(t);map.get(this)._SetFadeOutTime(t)}get fadeOutTime(){return map.get(this)._GetFadeOutTime()}}}{const C3=self.C3;C3.Behaviors.Fade.Cnds={OnFadeOutEnd(){return true},OnFadeInEnd(){return true},OnWaitEnd(){return true}}}
+{const C3=self.C3;C3.Behaviors.Fade.Acts={StartFade(){this._StartFade()},RestartFade(){this._RestartFade()},SetFadeInTime(t){this._SetFadeInTime(t)},SetWaitTime(t){this._SetWaitTime(t)},SetFadeOutTime(t){this._SetFadeOutTime(t)}}}{const C3=self.C3;C3.Behaviors.Fade.Exps={FadeInTime(){return this._GetFadeInTime()},WaitTime(){return this._GetWaitTime()},FadeOutTime(){return this._GetFadeOutTime()}}};
+
+}
+
+{
 const C3 = self.C3;
 self.C3_GetObjectRefTable = function () {
 	return [
@@ -4143,6 +4159,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Keyboard,
 		C3.Plugins.Mouse,
 		C3.Behaviors.scrollto,
+		C3.Behaviors.Fade,
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.Sprite.Exps.X,
@@ -4160,7 +4177,14 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Exps.Angle,
 		C3.Plugins.Sprite.Acts.RotateTowardPosition,
 		C3.Plugins.Mouse.Exps.X,
-		C3.Plugins.Mouse.Exps.Y
+		C3.Plugins.Mouse.Exps.Y,
+		C3.Plugins.System.Exps.random,
+		C3.Plugins.System.Exps.layoutwidth,
+		C3.Plugins.System.Exps.layoutheight,
+		C3.Plugins.Sprite.Acts.SetScale,
+		C3.Behaviors.Fade.Acts.SetFadeInTime,
+		C3.Plugins.System.Exps.choose,
+		C3.Behaviors.Fade.Acts.SetFadeOutTime
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4172,6 +4196,8 @@ self.C3_JsPropNameTable = [
 	{Mouse: 0},
 	{ScrollTo: 0},
 	{camera: 0},
+	{Fade: 0},
+	{star: 0},
 	{player_speed: 0}
 ];
 
@@ -4181,7 +4207,8 @@ self.InstanceType = {
 	Browser: class extends self.IInstance {},
 	Keyboard: class extends self.IInstance {},
 	Mouse: class extends self.IInstance {},
-	camera: class extends self.ISpriteInstance {}
+	camera: class extends self.ISpriteInstance {},
+	star: class extends self.ISpriteInstance {}
 }
 }
 
@@ -4325,6 +4352,26 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
+		},
+		() => "effects",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => f0(20, (f1() - 20));
+		},
+		() => "",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(0.2, 0.5);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => add(f0(0.5, 0.7, 2, 1.4), 1);
+		},
+		() => 4,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => add(f0(0.8, 1.7, 2, 3.4), 1);
 		}
 ];
 
